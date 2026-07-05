@@ -76,6 +76,9 @@ When this option is passed to curl_easy_setopt(3), libcurl does not copy the
 list so you **must** keep it around until you no longer use this *handle* for
 a transfer before you call curl_slist_free_all(3) on the list.
 
+Using this option multiple times makes the last set list override the previous
+ones. Set it to NULL to disable its use again.
+
 # DEFAULT
 
 NULL
@@ -93,10 +96,11 @@ int main(void)
 
   curl = curl_easy_init();
   if(curl) {
+    CURLcode result;
     curl_easy_setopt(curl, CURLOPT_CONNECT_TO, connect_to);
     curl_easy_setopt(curl, CURLOPT_URL, "https://example.com");
 
-    curl_easy_perform(curl);
+    result = curl_easy_perform(curl);
 
     /* always cleanup */
     curl_easy_cleanup(curl);
@@ -110,4 +114,7 @@ int main(void)
 
 # RETURN VALUE
 
-Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.
+curl_easy_setopt(3) returns a CURLcode indicating success or error.
+
+CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
+libcurl-errors(3).

@@ -9,6 +9,8 @@ See-also:
   - CURLOPT_SSLKEY (3)
 Protocol:
   - TLS
+  - SFTP
+  - SCP
 TLS-backend:
   - OpenSSL
   - mbedTLS
@@ -39,6 +41,9 @@ load a certificate but you need one to load your private key.
 The application does not have to keep the string around after setting this
 option.
 
+Using this option multiple times makes the last set string override the
+previous ones. Set it to NULL to disable its use again.
+
 # DEFAULT
 
 NULL
@@ -52,12 +57,12 @@ int main(void)
 {
   CURL *curl = curl_easy_init();
   if(curl) {
-    CURLcode res;
+    CURLcode result;
     curl_easy_setopt(curl, CURLOPT_URL, "https://example.com/foo.bin");
     curl_easy_setopt(curl, CURLOPT_SSLCERT, "client.pem");
     curl_easy_setopt(curl, CURLOPT_SSLKEY, "key.pem");
     curl_easy_setopt(curl, CURLOPT_KEYPASSWD, "superman");
-    res = curl_easy_perform(curl);
+    result = curl_easy_perform(curl);
     curl_easy_cleanup(curl);
   }
 }
@@ -72,5 +77,7 @@ CURLOPT_SSLCERTPASSWD up to 7.9.2.
 
 # RETURN VALUE
 
-Returns CURLE_OK if TLS enabled, CURLE_UNKNOWN_OPTION if not, or
-CURLE_OUT_OF_MEMORY if there was insufficient heap space.
+curl_easy_setopt(3) returns a CURLcode indicating success or error.
+
+CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
+libcurl-errors(3).

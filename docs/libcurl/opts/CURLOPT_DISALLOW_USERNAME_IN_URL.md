@@ -29,11 +29,13 @@ CURLcode curl_easy_setopt(CURL *handle, CURLOPT_DISALLOW_USERNAME_IN_URL,
 
 # DESCRIPTION
 
-A long parameter set to 1 tells the library to not allow URLs that include a
-username.
+A long parameter set to 1 tells the library to not allow URLs set with
+CURLOPT_URL(3) that include a username.
 
 This is the equivalent to the *CURLU_DISALLOW_USER* flag for the
 curl_url_set(3) function.
+
+Note that this option does not affect URLs set with CURLOPT_CURLU(3).
 
 # DEFAULT
 
@@ -48,11 +50,12 @@ int main(void)
 {
   CURL *curl = curl_easy_init();
   if(curl) {
-
+    CURLcode result;
     curl_easy_setopt(curl, CURLOPT_URL, "https://example.com");
     curl_easy_setopt(curl, CURLOPT_DISALLOW_USERNAME_IN_URL, 1L);
 
-    curl_easy_perform(curl);
+    result = curl_easy_perform(curl);
+    curl_easy_cleanup(curl);
   }
 }
 ~~~
@@ -61,7 +64,10 @@ int main(void)
 
 # RETURN VALUE
 
-Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.
+curl_easy_setopt(3) returns a CURLcode indicating success or error.
+
+CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
+libcurl-errors(3).
 
 curl_easy_perform(3) returns CURLE_LOGIN_DENIED if this option is
 enabled and a URL containing a username is specified.

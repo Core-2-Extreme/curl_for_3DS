@@ -54,7 +54,7 @@ With CURLOPT_CONNECTTIMEOUT_MS(3) set to 4000 and CURLOPT_TIMEOUT_MS(3) set to
 the connection phase.
 
 This option may cause libcurl to use the SIGALRM signal to timeout system
-calls on builds not using asynch DNS. In unix-like systems, this might cause
+calls on builds not using asynch DNS. In Unix-like systems, this might cause
 signals to be used unless CURLOPT_NOSIGNAL(3) is set.
 
 # DEFAULT
@@ -70,12 +70,14 @@ int main(void)
 {
   CURL *curl = curl_easy_init();
   if(curl) {
+    CURLcode result;
     curl_easy_setopt(curl, CURLOPT_URL, "https://example.com");
 
     /* complete connection within 10000 milliseconds */
     curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT_MS, 10000L);
 
-    curl_easy_perform(curl);
+    result = curl_easy_perform(curl);
+    curl_easy_cleanup(curl);
   }
 }
 ~~~
@@ -84,4 +86,7 @@ int main(void)
 
 # RETURN VALUE
 
-Returns CURLE_OK
+curl_easy_setopt(3) returns a CURLcode indicating success or error.
+
+CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
+libcurl-errors(3).

@@ -27,13 +27,13 @@
 
 /* global variable declarations, for libcurl runtime info */
 
-
 extern curl_version_info_data *curlinfo;
 
 extern const char * const *built_in_protos;
 extern size_t proto_count;
 
 extern const char * const *feature_names;
+extern size_t feature_count;
 
 extern const char *proto_file;
 extern const char *proto_ftp;
@@ -60,6 +60,8 @@ extern bool feature_spnego;
 extern bool feature_ssl;
 extern bool feature_tls_srp;
 extern bool feature_zstd;
+extern bool feature_ech;
+extern bool feature_ssls_export;
 
 CURLcode get_libcurl_info(void);
 const char *proto_token(const char *proto);

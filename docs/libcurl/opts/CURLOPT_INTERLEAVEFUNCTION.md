@@ -35,10 +35,10 @@ shown above.
 
 This callback function gets called by libcurl as soon as it has received
 interleaved RTP data. This function gets called for each $ block and therefore
-contains exactly one upper-layer protocol unit (e.g. one RTP packet). Curl
+contains exactly one upper-layer protocol unit (e.g. one RTP packet). curl
 writes the interleaved header as well as the included data for each call. The
 first byte is always an ASCII dollar sign. The dollar sign is followed by a
-one byte channel identifier and then a 2 byte integer length in network byte
+one-byte channel identifier and then a 2-byte integer length in network byte
 order. See RFC 2326 Section 10.12 for more information on how RTP interleaving
 behaves. If unset or set to NULL, curl uses the default write function.
 
@@ -98,4 +98,7 @@ int main(void)
 
 # RETURN VALUE
 
-Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.
+curl_easy_setopt(3) returns a CURLcode indicating success or error.
+
+CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
+libcurl-errors(3).

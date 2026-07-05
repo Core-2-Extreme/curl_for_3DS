@@ -30,11 +30,13 @@ CURLcode curl_easy_setopt(CURL *handle, CURLOPT_PREQUOTE,
 Pass a pointer to a linked list of FTP commands to pass to the server after
 the transfer type is set. The linked list should be a fully valid list of
 struct curl_slist structs properly filled in as described for
-CURLOPT_QUOTE(3). Disable this operation again by setting a NULL to this
-option.
+CURLOPT_QUOTE(3).
 
-These commands are not performed when a directory listing is performed, only
-for file transfers.
+Using this option multiple times makes the last set string override the
+previous ones. Set it to NULL to disable its use again.
+
+libcurl does not copy the list, it needs to be kept around until after the
+transfer has completed.
 
 While CURLOPT_QUOTE(3) and CURLOPT_POSTQUOTE(3) work for SFTP,
 this option does not.
@@ -55,16 +57,17 @@ int main(void)
 
   CURL *curl = curl_easy_init();
   if(curl) {
-    CURLcode res;
+    CURLcode result;
     curl_easy_setopt(curl, CURLOPT_URL, "ftp://example.com/foo.bin");
 
     /* pass in the FTP commands to run */
     curl_easy_setopt(curl, CURLOPT_PREQUOTE, cmdlist);
 
-    res = curl_easy_perform(curl);
+    result = curl_easy_perform(curl);
 
     curl_easy_cleanup(curl);
   }
+  curl_slist_free_all(cmdlist);
 }
 ~~~
 
@@ -72,4 +75,7 @@ int main(void)
 
 # RETURN VALUE
 
-Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.
+curl_easy_setopt(3) returns a CURLcode indicating success or error.
+
+CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
+libcurl-errors(3).

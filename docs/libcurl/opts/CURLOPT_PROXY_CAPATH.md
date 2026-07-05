@@ -42,6 +42,10 @@ CURLOPT_PROXY_SSL_VERIFYPEER(3) is enabled (which it is by default).
 The application does not have to keep the string around after setting this
 option.
 
+Using this option multiple times makes the last set string override the
+previous ones. Set it to NULL to disable its use again and switch back to
+internal default.
+
 The default value for this can be figured out with CURLINFO_CAPATH(3).
 
 # DEFAULT
@@ -57,12 +61,12 @@ int main(void)
 {
   CURL *curl = curl_easy_init();
   if(curl) {
-    CURLcode res;
+    CURLcode result;
     curl_easy_setopt(curl, CURLOPT_URL, "https://example.com/");
     /* using an HTTPS proxy */
-    curl_easy_setopt(curl, CURLOPT_PROXY, "https://localhost:443");
+    curl_easy_setopt(curl, CURLOPT_PROXY, "https://proxy.example:443");
     curl_easy_setopt(curl, CURLOPT_PROXY_CAPATH, "/etc/cert-dir");
-    res = curl_easy_perform(curl);
+    result = curl_easy_perform(curl);
     curl_easy_cleanup(curl);
   }
 }
