@@ -62,13 +62,14 @@ static int wakeup_pipe(curl_socket_t socks[2], bool nonblocking)
   if(pipe(socks))
     return -1;
 #ifdef HAVE_FCNTL
+  /* 3DS doesn't support F_SETFD.
   if(fcntl(socks[0], F_SETFD, FD_CLOEXEC) ||
      fcntl(socks[1], F_SETFD, FD_CLOEXEC)) {
     sclose(socks[0]);
     sclose(socks[1]);
     socks[0] = socks[1] = CURL_SOCKET_BAD;
     return -1;
-  }
+  } */
 #endif
   if(nonblocking) {
     if(curlx_nonblock(socks[0], TRUE) < 0 ||
@@ -162,7 +163,8 @@ static int wakeup_inet(curl_socket_t socks[2], bool nonblocking)
   memset(&a, 0, sizeof(a));
   a.inaddr.sin_family = AF_INET;
   a.inaddr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-  a.inaddr.sin_port = 0;
+  /* Port 0 can't be used on 3DS. */
+  a.inaddr.sin_port = 2;
 
   socks[0] = socks[1] = CURL_SOCKET_BAD;
 

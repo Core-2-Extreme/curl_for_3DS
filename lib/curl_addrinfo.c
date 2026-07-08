@@ -131,10 +131,11 @@ int Curl_getaddrinfo_ex(const char *nodename,
     if(!ai->ai_addr || !(ai->ai_addrlen > 0))
       continue;
 
-    //We need to ignore this on 3DS since this error check will be positive.
-    // /* ignore elements with bogus address size */
-    // if((size_t)ai->ai_addrlen < ss_size)
-    //   continue;
+    /* We need to ignore this on 3DS since this error
+    check will be positive. */
+    /* ignore elements with bogus address size */
+    /* if((size_t)ai->ai_addrlen < ss_size)
+      continue; */
 
     ca = curlx_malloc(sizeof(struct Curl_addrinfo) + ss_size + namelen);
     if(!ca) {

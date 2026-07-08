@@ -178,7 +178,7 @@ static void tcpkeepalive(struct Curl_cfilter *cf,
                          struct Curl_easy *data,
                          curl_socket_t sockfd)
 {
-  //3DS doesn't support SO_KEEPALIVE.
+  /* 3DS doesn't support SO_KEEPALIVE. */
   infof(data, "Failed to set SO_KEEPALIVE on fd "
         "%u: SO_KEEPALIVE is NOT supported",
         sockfd);
@@ -323,6 +323,7 @@ static CURLcode socket_open(struct Curl_easy *data,
 #endif /* USE_SO_NOSIGPIPE */
 
 #if defined(HAVE_FCNTL) && !defined(SOCK_CLOEXEC)
+  /* 3DS doesn't support F_SETFD.
   if(fcntl(*sockfd, F_SETFD, FD_CLOEXEC) < 0) {
     failf(data, "fcntl set CLOEXEC: %s",
           curlx_strerror(SOCKERRNO, errbuf, sizeof(errbuf)));
@@ -330,6 +331,7 @@ static CURLcode socket_open(struct Curl_easy *data,
     *sockfd = CURL_SOCKET_BAD;
     return CURLE_COULDNT_CONNECT;
   }
+  */
 #endif
 
 #if defined(USE_IPV6) && defined(HAVE_SOCKADDR_IN6_SIN6_SCOPE_ID)
@@ -2054,12 +2056,14 @@ static CURLcode cf_tcp_accept_connect(struct Curl_cfilter *cf,
   }
 #ifndef HAVE_ACCEPT4
 #ifdef HAVE_FCNTL
+  /* 3DS doesn't support F_SETFD.
   if(fcntl(s_accepted, F_SETFD, FD_CLOEXEC) < 0) {
     failf(data, "fcntl set CLOEXEC: %s",
           curlx_strerror(SOCKERRNO, errbuf, sizeof(errbuf)));
     Curl_socket_close(data, cf->conn, s_accepted);
     return CURLE_FTP_ACCEPT_FAILED;
   }
+  */
 #endif /* HAVE_FCNTL */
   if(curlx_nonblock(s_accepted, TRUE) < 0) {
     failf(data, "set socket NONBLOCK: %s",

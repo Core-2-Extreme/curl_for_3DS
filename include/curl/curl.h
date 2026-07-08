@@ -30,10 +30,10 @@
  */
 
 #if __GNUC__
-//We don't want to see warnings in 3rd party headers.
+/* We don't want to see warnings in 3rd party headers. */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpedantic"
-#endif //__GNUC__
+#endif /* __GNUC__ */
 
 #ifdef CURL_NO_OLDIES
 #define CURL_STRICTER /* not used since 8.11.0 */
@@ -3352,6 +3352,6 @@ CURL_EXTERN CURLcode curl_easy_ssls_export(CURL *curl,
 
 #if __GNUC__
 #pragma GCC diagnostic pop
-#endif //__GNUC__
+#endif /* __GNUC__ */
 
 #endif /* CURLINC_CURL_H */
